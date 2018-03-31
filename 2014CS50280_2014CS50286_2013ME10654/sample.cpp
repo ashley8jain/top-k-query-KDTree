@@ -5,12 +5,41 @@
 using namespace std;
 
 class Node{
+public:
     double point[20];
     Node *left,*right;
 };
 
-Node* constructKdTree(double points[][20],int n,int d,Node* root){
+Node* insert(Node *root, double point[20],int depth,int dim){
     
+    if(root==NULL)
+    {
+        root = new Node();
+        for(int i=0; i<dim; i++)
+        {
+            root->point[i] = point[i];
+            root->left = root->right = NULL;
+        }
+        return root;
+    }
+    
+    int split_dim = depth % dim;
+    
+    if(point[split_dim] < root->point[split_dim] )
+    {
+        root->left = insert(root->left, point, depth+1, dim);
+    }
+    else
+        root->right = insert(root->right, point, depth+1, dim);
+    
+    return root;
+}
+
+Node* constructKdTree(double points[][20],int n,int dim,Node* root){
+    
+    for(int i=0;i<n;i++){
+        root = insert(root,points[i],0,dim);
+    }
     
     return root;
 }
@@ -21,14 +50,14 @@ int main(int argc, char* argv[]) {
     
 
     // [TODO] Construct kdTree using dataset_file here
-    int n,d;
+    int n,dim;
     ifstream infile;
     infile.open(dataset_file);
-    infile >> d >> n;
+    infile >> dim >> n;
     
     double points[n][20];
     for(int i=0;i<n;i++){
-        for(int j=0;j<d;j++){
+        for(int j=0;j<dim;j++){
             infile >> points[i][j];
 //            cerr<<points[i][j]<<" ";
         }
@@ -37,7 +66,7 @@ int main(int argc, char* argv[]) {
     infile.close();
 
     Node *root = NULL;
-    root = constructKdTree(points,n,d,root);
+    root = constructKdTree(points,n,dim,root);
     
     
     
