@@ -1,0 +1,10 @@
+# To generate for all dimensions [2,3,5,10,15,20]
+# Generates a data file named 'data-i' for dimension i
+python a.py
+
+# To generate data for specific dimension
+# Usage
+python a.py dimension
+# Example - 'python a.py 7'
+# Generates a file named 'data-7' with 7 space separated points'
+# in each line
