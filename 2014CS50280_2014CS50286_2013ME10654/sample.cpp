@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <fstream>
+#include <queue>
 
 using namespace std;
 
@@ -44,7 +45,117 @@ Node* constructKdTree(double points[][20],int n,int dim,Node* root){
     return root;
 }
 
-int main(int argc, char* argv[]) {
+void best_first_algo(double points[][20],int n,int dim,double query_point[20],int k){
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+double squared_dist(double point1[20],double point2[20],int dim){
+    double dis = 0.0;
+    double mag = 0.0;
+    for(int i=0;i<dim;i++){
+        mag = point1[i]-point2[i];
+        dis+= (mag*mag);
+    }
+    return dis;
+}
+
+
+
+
+
+
+class object{
+public:
+    double *point;
+    double dist;
+    object(double *pt,double d){
+        point = pt;
+        dist = d;
+    }
+};
+
+class comparator{
+public:
+    int operator() (const object& p1, const object& p2){
+        return p1.dist < p2.dist;
+    }
+};
+
+void sequential_scan(double points[][20],int n,int dim,double query_point[20],int k){
+    
+    priority_queue<object,vector<object>,comparator> pq;
+    cout<<endl;
+    for(int j=0;j<dim;j++){
+        cout<<query_point[j]<<" ";
+    }
+    cout<<endl;
+    
+    for(int i=0;i<n;i++){
+        object *o = new object(points[i],squared_dist(points[i], query_point, dim));
+        cout<<o->point[0]<<endl;
+        cout<<o->dist<<endl<<endl;
+        if (pq.size() < k)
+            pq.push(*o);
+        else if(o->dist < pq.top().dist){
+            pq.pop();
+            pq.push(*o);
+        }
+//        pq.push(o);
+    }
+    
+//    cout<<endl<<"answer: "<<endl;
+    
+    ofstream outfile;
+    outfile.open("results.txt");
+    
+    vector<vector<double> > answers_pts(pq.size());
+    while(!pq.empty()){
+        object o = pq.top();
+        for(int j=0;j<dim;j++){
+//            cout<<o.point[j]<<" ";
+            answers_pts[pq.size()-1].push_back(o.point[j]);
+        }
+        pq.pop();
+//        cout<<endl;
+    }
+    
+    for(int i=0;i<answers_pts.size();i++){
+        for(int j=0;j<dim;j++){
+            outfile<<answers_pts[i][j]<<" ";
+        }
+        outfile<<"\n";
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int main(int argc, char* argv[]){
     
     char* dataset_file = argv[1];
     
@@ -86,13 +197,17 @@ int main(int argc, char* argv[]) {
     // [TODO] Read the query point from query_file, do kNN using the kdTree and output the answer to results.txt
     infile.open(query_file);
     int d_q;
-    cin>>d_q;
+    infile>>d_q;
     double query_point[20];
     for(int i=0;i<d_q;i++){
         infile>>query_point[i];
     }
     infile.close();
     
+    
+    //kNN
+    sequential_scan(points, n, dim, query_point, k);
+//    best_first_algo(points, n, dim, query_point, k);
     
     
     
