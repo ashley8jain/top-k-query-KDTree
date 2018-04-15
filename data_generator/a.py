@@ -5,7 +5,7 @@ numOfArgs = len(sys.argv)-1
 numOfPoints = 100000
 
 def generatePoints(dim):
-	fileName = "data-" + str(dim)
+	fileName = "dataset-" + str(dim) + ".txt"
 	file = open("%s"%fileName,"w")
 	for i in xrange(numOfPoints):
 		for j in xrange(dim):
